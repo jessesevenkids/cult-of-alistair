@@ -2,7 +2,7 @@ import sys
 import random
 import time
 
-from rad_alistair.character import Character, spawn_bat, spawn_demon, spawn_skeleton, spawn_enemy
+from rad_alistair.character import Character, spawn_bat, spawn_demon, spawn_skeleton
 
 
 player_character = Character("Marshmellow", 100, 20, 10)
