@@ -1,0 +1,26 @@
+[build-system]
+requires = [
+    "build",
+    "setuptools >= 65.3.0",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rad_alistair"
+version = "0.1.0"
+description = "<Describe the package here>"
+authors = [
+    { "name" = "Jesse Duckworth", "email" = "jesseduck60@gmail.com" },
+]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.11",
+]
+requires-python = ">=3.9"
+dependencies = []
+
+
+[project.entry-points.console_scripts]
+radmj = "rad_alistair.main:main"
