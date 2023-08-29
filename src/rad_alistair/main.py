@@ -3,75 +3,10 @@ import random
 import time
 
 from rad_alistair.character import Character, spawn_bat, spawn_demon, spawn_skeleton
-
+from rad_alistair.item import Item, Helmet, BaseArmor, HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor, Accessory, Weapon
 
 player_character = Character("Marshmellow", 100, 20, 10)
 Alistair = Character("Alistair", 200, 20, 10)
-
-
-class Item:
-    def __init__(self, name, weight, defense):
-        self.name = name
-        self.weight = weight
-        self.defense = defense
-
-    def __str__(self):
-        return f"{self.name}: Weight: {self.weight}  -  Defense: {self.defense}"
-
-    def __repr__(self):
-        return self.__str__()
-
-
-class Helmet:
-    def __init__(self, name, weight, defense):
-        self.name = name
-        self.weight = weight
-        self.defense = defense
-
-    def __str__(self):
-        return f"{self.name}: Weight: {self.weight}  -  Defense: {self.defense}"
-
-    def __repr__(self):
-        return self.__str__()
-
-
-class Armor:
-    def __init__(self, name, weight, defense):
-        self.name = name
-        self.weight = weight
-        self.defense = defense
-
-    def __str__(self):
-        return f"{self.name}: Weight: {self.weight}  -  Defense: {self.defense}"
-
-    def __repr__(self):
-        return self.__str__()
-
-
-class Accessory:
-    def __init__(self, name, weight, defense):
-        self.name = name
-        self.weight = weight
-        self.defense = defense
-
-    def __str__(self):
-        return f"{self.name}: Weight: {self.weight}  -  Defense: {self.defense}"
-
-    def __repr__(self):
-        return self.__str__()
-
-
-class Weapon:
-    def __init__(self, name, weight, attack):
-        self.weight = weight
-        self.attack = attack
-        self.name = name
-
-    def __str__(self):
-        return f"{self.name}: Weight: {self.weight}  -  Attack: {self.attack}"
-
-    def __repr__(self):
-        return self.__str__()
 
 
 introduction = '''You awake but don't open your eyes.
@@ -104,6 +39,9 @@ def print_backpack():
 
 def add_to_backpack(item):
     inventory["backpack"].append(item)
+
+#def add_to_self_inventory(HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor)
+#    inventory["self.inventory"].append(HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor)
 
 
 def check_backpack(search_name):
@@ -337,7 +275,6 @@ def action_6():
                     return action_8
 
 
-
 def action_7():
     global inventory
     time.sleep(1)
@@ -522,7 +459,7 @@ def action_13():
                 total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
                 time.sleep(1)
                 print("You find a Studded Leather Vest!")
-                armor_1 = Item(name="Studded Leather Vest", weight=2, defense=20)
+                armor_1 = ChestArmor(name="Studded Leather Vest", weight=2, defense=20)
                 add_to_backpack(armor_1)
                 print("\n")
                 print_backpack()
@@ -833,21 +770,21 @@ def action_exit():
         sys.exit()
 
 def get_input(text):
-    response = input(f"{text}\n> ").lower()
+    response = input(f"{text}\n> ").lower().strip()
     while True:
         # response.lower() lowercases the value; .strip() removes leading/trailing spaces - that way if someone types
         # something like: "  show inventory" or " SHOW INVENtory  "   it'll all still work
-        if response.lower().strip() == "show inventory":
+        if response == "show inventory":
             for key, value in inventory.items():
                 print(f"{key.title()}: {value}")
             response = input("> ")
-        if response.lower().strip() in ("quit", "q", "exit"):
+        if response in ("quit", "q", "exit"):
             print("See you loser!")
             sys.exit()
-        if response.lower().strip() in ("backpack", "show backpack"):
+        if response in ("backpack", "show backpack"):
             print_backpack()
             response = input("> ")
-        if response.lower().strip() in ("equip", "e"):
+        if response in ("equip", ):
             print(" ")
             response = input("> ")
         else:

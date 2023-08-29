@@ -24,3 +24,4 @@ dependencies = []
 
 [project.entry-points.console_scripts]
 radmj = "rad_alistair.main:main"
+ 

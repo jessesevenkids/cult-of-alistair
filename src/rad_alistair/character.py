@@ -1,12 +1,122 @@
 import random
-
+from rad_alistair.item import HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor
 
 class Character:
     def __init__(self, name, health, attackPower, defense):
         self.name = name
         self.health = health
-        self.attackPower = attackPower
-        self.defense = defense
+        self.base_attack = attackPower
+        self.base_defense = defense
+
+        # Equipment slots
+        self.lhand = None
+        self.rhand = None
+        self.head = None 
+        self.chest = None
+        self.waist = None
+        self.legs = None
+        self.feet = None
+        self.accessory = None
+        self.accessory2 = None
+
+        # Inventory
+        self.inventory = []
+    
+    def print_inventory(self):
+        max_len = 9
+        for item in self.inventory:
+            item_len = len(item.name)
+            if item_len > max_len:
+                max_len = item_len 
+
+        column = max_len + 4
+        print("=" * column)
+        title = "Inventory".center(max_len)
+        print(f"| {title} |")
+        print("=" * column)
+
+        for item in self.inventory:
+            centered_item = item.name.center(column)
+            print(centered_item)
+        print("=" * column)
+
+    def print_equiped(self):
+        if self.lhand:
+            print(f"Left Hand: {self.lhand.name}")
+        else:
+            print("Left Hand: <empty>")
+
+    def equip_chest(self, item):
+        if isinstance(item, ChestArmor):
+            self.chest = item
+        else:
+            print(f"Sorry, {item} cannot be equipt to your chest.")
+
+    @property
+    def defense(self):
+        total = self.base_defense
+        if self.lhand:
+            total += getattr(self.lhand, "defense", 0)
+        if self.rhand:
+            total += getattr(self.rhand, "defense", 0)
+        if self.accessory:
+            total += getattr(self.accessory, "defense", 0)
+        if self.accessory2:
+            total += getattr(self.accessory2, "defense", 0)
+        if self.head:
+            total += self.head.defense
+        if self.chest:
+            total += self.chest.defense
+        if self.waist:
+            total += self.waist.defense
+        if self.legs:
+            total +=self.legs.defense
+        if self.feet:
+            total += self.feet.defense
+        if self.accessory:
+            total += self.accessory.defense
+        if self.accessory2:
+            total += self.accessory2.defense
+
+        return total 
+
+    
+    @property
+    def attackPower(self):
+        total = self.base_attack
+        if self.head:
+            total += getattr(self.head, "attackPower", 0)
+        if self.chest:
+            total += getattr(self.chest, "attackPower", 0)
+        if self.waist:
+            total += getattr(self.waist, "attackPower", 0)
+        if self.legs:
+            total += getattr(self.legs, "attackPower", 0)
+        if self.feet:
+            total += getattr(self.feet, "attackPower", 0)
+        if self.accessory:
+            total += getattr(self.accessory, "attackPower", 0)
+        if self.accessory2:
+            total += getattr(self.accessory2, "attackPower", 0)
+        if self.lhand:
+            total += self.lhand.attackPower
+        if self.rhand:
+            total += self.rhand.attackPower
+        if self.head:
+            total += self.head.attackPower
+        if self.chest:
+            total += self.chest.attackPower
+        if self.waist:
+            total += self.waist.attackPower
+        if self.legs:
+            total += self.legs.attackPower
+        if self.feet:
+            total += self.feet.attackPower
+        if self.accessory:
+            total += self.accessory.attackPower
+        if self.accessory2:
+            total += self.accessory2.attackPower
+
 
     def attack(self, enemy):
         print(f"{self.name} attacks {enemy.name}!")
@@ -94,7 +204,7 @@ def spawn_demon():
     if random.randint(1, 100) == 1:
         name = "Shiny Demon"
         health = random.randint(80, 300)
-        attack = random.randint(10, 40)
+        attack = random.randint(15, 40)
         defense = random.randint(5, 30)
     else:
         name = "Demon"
