@@ -46,11 +46,35 @@ class Character:
         else:
             print("Left Hand: <empty>")
 
+    def equip_head(self, item):
+        if isinstance(item, HeadArmor):
+            self.chest = item
+        else:
+            print(f"Sorry, {item} cannot be equipt to your head.")
+
     def equip_chest(self, item):
         if isinstance(item, ChestArmor):
             self.chest = item
         else:
             print(f"Sorry, {item} cannot be equipt to your chest.")
+
+    def equip_waist(self, item):
+        if isinstance(item, WaistArmor):
+            self.chest = item
+        else:
+            print(f"Sorry, {item} cannot be equipt to your Waist.")
+
+    def equip_legs(self, item):
+        if isinstance(item, LegArmor):
+            self.chest = item
+        else:
+            print(f"Sorry, {item} cannot be equipt to your legs.")
+
+    def equip_feet(self, item):
+        if isinstance(item, FeetArmor):
+            self.chest = item
+        else:
+            print(f"Sorry, {item} cannot be equipt to your feet.")
 
     @property
     def defense(self):
@@ -77,7 +101,6 @@ class Character:
             total += self.accessory.defense
         if self.accessory2:
             total += self.accessory2.defense
-
         return total 
 
     
@@ -116,6 +139,7 @@ class Character:
             total += self.accessory.attackPower
         if self.accessory2:
             total += self.accessory2.attackPower
+        return total
 
 
     def attack(self, enemy):
@@ -150,7 +174,7 @@ class Character:
 
     def pray(self):
         print(f"{self.name} You pray to Thor Odinson!.")
-        self.health += round(self.health * 0.25)
+        self.health += int(self.health * 0.25)
         print(f"{self.name}'s health is now {self.health}.")
 
 

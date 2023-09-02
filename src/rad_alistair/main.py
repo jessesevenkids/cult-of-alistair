@@ -30,20 +30,6 @@ inventory = {
 }
 
 
-def print_backpack():
-    print("Backpack contents:")
-    for item in inventory["backpack"]:
-        print(item)
-    print()
-
-
-def add_to_backpack(item):
-    inventory["backpack"].append(item)
-
-#def add_to_self_inventory(HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor)
-#    inventory["self.inventory"].append(HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor)
-
-
 def check_backpack(search_name):
     backpack = inventory["backpack"]
     for item in backpack:
@@ -64,9 +50,9 @@ def action_1():
     print("\n")
     print("A simple quest of finding a missing child\nended with you captured by the Cult of Alistair.\nNow you're in a dungeon and your sword is gone.\nYou take the torch and walk down the hallway.")
     item_1 = Item(name="Torch", weight=1, defense=0)
-    add_to_backpack(item_1)
+    player_character.inventory.append(item_1)
     print("\n")
-    print_backpack()
+    player_character.print_inventory()
     time.sleep(3)
     return action_2
 
@@ -78,16 +64,17 @@ def action_2():
     print("One to the West, North, and East.")
     print("You can hear people talking in the distance.")
     print("Which do you choose?")
-    response = get_input("W, N, E")
-    if response == "w":
-        time.sleep(1)
-        return action_3
-    elif response == "n":
-        time.sleep(1)
-        return action_4
-    elif response == "e":
-        time.sleep(1)
-        return action_5
+    while True:
+        response = get_input("W, N, E")
+        if response == "w":
+            time.sleep(1)
+            return action_3
+        elif response == "n":
+            time.sleep(1)
+            return action_4
+        elif response == "e":
+            time.sleep(1)
+            return action_5
 
 
 def action_3():
@@ -99,22 +86,24 @@ def action_3():
     print("Bats flutter overheard.")
     print("The room is otherwise empty")
     print("Would you like to search the room?")
-    response = get_input("Y, N")
-    if response == "y":
-        time.sleep(1)
-        print("You find Key!")
-        item_2 = Item(name="Key", weight=1, defense=0)
-        add_to_backpack(item_2)
-        print("\n")
-        print_backpack()
-        time.sleep(1)
-        print("The room is now empty.")
-        print("You return to the previous room.")
-        return action_2
-    elif response =="n":
-        time.sleep(1)
-        print("You return to main room")
-        return action_2
+    while True:
+        response = get_input("Y, N")
+        if response == "y":
+            time.sleep(1)
+            print("You find a Key!")
+            item_2 = Item(name="Key", weight=1, defense=0)
+            player_character.inventory.append(item_2)
+            print("\n")
+            player_character.print_inventory()
+            print("\n")
+            time.sleep(1)
+            print("The room is now empty.")
+            print("You return to the previous room.")
+            return action_2
+        elif response =="n":
+            time.sleep(1)
+            print("You return to main room")
+            return action_2
 
 
 def action_4():
@@ -123,32 +112,37 @@ def action_4():
     time.sleep(1)
     print("\n")
     print("You enter the north room(4).")
-    print("Skeleton's are milling about.")
+    print("Skeleton's are fighting over what to eat.")
     print("They haven't seen you.")
     print("What would you like to do?")
-    choice = get_input("1. Fight\n2. Sneak passed skeletons.\n3. Retreat")
-    spawned_skeleton = spawn_skeleton()
-    if choice == "1":
-        time.sleep(1)
-        result = run_battle(player_character, spawned_skeleton)
-        if result == "victory":
-            reward = random.randint(2, 10)  # Generate a random number between 2 and 10
-            print(
-                f"You kill {spawned_skeleton.name}!\n"
-                f"You find {reward} gold pieces!"
-            )
-            inventory["gold"] += reward  # Add the reward to the inventory
-            total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
+    while True:
+        choice = get_input("1. Fight\n2. Sneak passed skeletons")
+        spawned_skeleton = spawn_skeleton()
+        if choice == "1":
             time.sleep(1)
-            print("The room is now empty.")
-            print("There is a door to the north.")
+            result = run_battle(player_character, spawned_skeleton)
+            if result == "victory":
+                reward = random.randint(2, 10)  # Generate a random number between 2 and 10
+                print(
+                    f"You kill {spawned_skeleton.name}!\n"
+                    f"You find {reward} gold pieces!"
+                )
+                inventory["gold"] += reward  # Add the reward to the inventory
+                total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
+                time.sleep(1)
+                print("The room is now empty.")
+                print("There is a door to the north.")
+                return action_6
+            elif result == "defeat":
+                total_deaths += 1
+                print(f"You are a disappointment to your father. Inigo Montoya is also disappointed!")
+                return action_exit
+            else:
+                return action_2
+        if choice == "2":
+            print("You enter the door to the north.")
             return action_6
-        elif result == "defeat":
-            total_deaths += 1
-            print(f"You are a disappointment to your father. Inigo Montoya is also disappointed!")
-            return action_exit
-        else:
-            return action_2
+
 
 
 def action_5():
@@ -160,82 +154,11 @@ def action_5():
     print("You enter the east room(5)")
     print("A skeleton sees you enter the room.")
     print("What would you like to do?")
-    choice = get_input("1. Fight\n2. Retreat")
-    spawned_skeleton = spawn_skeleton()
-    if choice == "1":
-        time.sleep(1)
-        result = run_battle(player_character, spawned_skeleton)
-        if result == "victory":
-            reward = random.randint(2, 10)  # Generate a random number between 2 and 10
-            print(
-                f"You kill {spawned_skeleton.name}!\n"
-                f"You find {reward} gold pieces!"
-            )
-            inventory["gold"] += reward  # Add the reward to the inventory
-            total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
-            time.sleep(1)
-            print("You rummage through whats left of his bony body.")
-            print("One bone is a perfect club.")
-            print("You find Bone Club!")
-            weapon_1 = Weapon(name="Bone Club", weight=2, attack=15)
-            add_to_backpack(weapon_1)
-            print("\n")
-            print_backpack()
-            print("Equip the Bone Club?")
-            response = get_input("Y, N")
-            if response == "y":
-                print("You have equipped the Bone club!")
-                player_character.attackPower += 15
-                time.sleep(1)
-                print("The room is now empty.")
-                print("You return to the previous room.")
-                time.sleep(1)
-                return action_2
-            else:
-                time.sleep(1)
-                print("The room is now empty.")
-                print("You return to the previous room.")
-                time.sleep(1)
-                return action_2
-        elif result == "defeat":
-            total_deaths += 1
-            print(f"You are a disappointment to your father. Inigo Montoya is also disappointed!")
-            return action_exit
-        else:
-            time.sleep(1)
-            return action_2
-
-    elif choice == "2":
-        time.sleep(1)
-        return action_2
-
-
-def action_6():
-    global total_deaths
-    global total_victories
-    global inventory
-    time.sleep(1)
-    print("\n")
-    print("You enter the north room(6).")
-    print("Skeleton's are fighting over a key.")
-    print("They haven't noticed you.")
-    print("Sneak by?")
     while True:
-        response = get_input("Y, N")
-        if response == "y":
+        choice = get_input("1. Fight\n2. Retreat")
+        spawned_skeleton = spawn_skeleton()
+        if choice == "1":
             time.sleep(1)
-            print("There are doors to the west and east.")
-            print("Which do you choose?")
-            response = get_input("W, E")
-            if response == "w":
-                time.sleep(1)
-                return action_7
-            elif response == "e":
-                time.sleep(1)
-                return action_8
-        elif response == "n":
-            time.sleep(1)
-            spawned_skeleton = spawn_skeleton()
             result = run_battle(player_character, spawned_skeleton)
             if result == "victory":
                 reward = random.randint(2, 10)  # Generate a random number between 2 and 10
@@ -246,33 +169,74 @@ def action_6():
                 inventory["gold"] += reward  # Add the reward to the inventory
                 total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
                 time.sleep(1)
-                print("You find a key!")
-                item_2 = Item(name="Key", weight=1, defense=0)
-                add_to_backpack(item_2)
+                print("You rummage through whats left of his bony body.")
+                print("One bone is a perfect club.")
+                print("You find Bone Club!")
+                weapon_1 = Weapon(name="Bone Club", weight=2, attack=8)
                 print("\n")
-                print_backpack()
+                player_character.print_inventory()
+                print("\n")
+                print("Equip the Bone Club?")
+                response = get_input("Y, N")
+                if response == "y":
+                    print("You have equipped the Bone club!")
+                    player_character.lhand = weapon_1
+                    time.sleep(1)
+                    print("The room is now empty.")
+                    print("You return to the previous room.")
+                    time.sleep(1)
+                    return action_2
+                else:
+                    time.sleep(1)
+                    player_character.inventory.append(weapon_1)
+                    print("The room is now empty.")
+                    print("You return to the previous room.")
+                    time.sleep(1)
+                    return action_2
+            elif result == "defeat":
+                total_deaths += 1
+                print(f"You are a disappointment to your father. Inigo Montoya is also disappointed!")
+                return action_exit
+        elif choice == "2":
+            time.sleep(1)
+            return action_2
+
+
+def action_6():
+    global total_deaths
+    global total_victories
+    global inventory
+    time.sleep(1)
+    print("\n")
+    print("You enter the north room(6).")
+    print("A Skeleton attacks you!")
+    spawned_skeleton = spawn_skeleton()
+    result = run_battle(player_character, spawned_skeleton)
+    if result == "victory":
+        reward = random.randint(2, 10)  # Generate a random number between 2 and 10
+        print(
+            f"You kill {spawned_skeleton.name}!\n"
+            f"You find {reward} gold pieces!"
+        )
+        inventory["gold"] += reward  # Add the reward to the inventory
+        total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
+        time.sleep(1)
+        print("\n")
+        player_character.print_inventory()
+        print("\n")
+        time.sleep(1)
+        print("There are doors to the west and east.")
+        print("Which do you choose?")
+        while True:
+            response = get_input("W, E")
+            if response == "w":
                 time.sleep(1)
-                print("There are doors to the west and east.")
-                print("Which do you choose?")
-                response = get_input("W, E")
-                if response == "w":
-                    time.sleep(1)
-                    return action_7
-                elif response == "e":
-                    time.sleep(1)
-                    return action_8
+                return action_7
+            elif response == "e":
+                time.sleep(1)
+                return action_8
             elif result == "defeat":
                 return action_exit
-            else:
-                print("There are doors to the west and east.")
-                print("Which do you choose?")
-                response = get_input("W, E")
-                if response == "w":
-                    time.sleep(1)
-                    return action_7
-                elif response == "e":
-                    time.sleep(1)
-                    return action_8
 
 
 def action_7():
@@ -282,32 +246,29 @@ def action_7():
     print("You enter the west room(7).")
     print("The room is safe.") 
     print("A statue is in the middle of the room.")
-    print("Do you want to inspect it?") 
-    #if check_backpack("Key"):
-    #    print("Would you like to unlock it?")
-    response = get_input("Y, N")
-    if response == "y":
-        print("It's a stone statue of a large man,")
-        print("wearing a winged helmet, and holding a hammer.")
-        print("There's an inscription that reads:") 
-        print("Pray before Thor Odinson for strength.")
-        print("Do you pray?")
+    print("Do you want to inspect it?")
+    while True: 
         response = get_input("Y, N")
         if response == "y":
-            print("You are healed and power surges through your veins!")
-            player_character.health += 25
-            player_character.attackPower += 5
-            time.sleep(1)
-            return action_9
+            print("It's a stone statue of a large man,")
+            print("wearing a winged helmet, and holding a hammer.")
+            print("There's an inscription that reads:") 
+            print("Pray before Thor Odinson for strength.")
+            print("Do you pray?")
+            response = get_input("Y, N")
+            if response == "y":
+                print("You are healed and power surges through your veins!")
+                player_character.health += 25
+                player_character.base_attack += 5
+                time.sleep(1)
+                return action_9
+            else:
+                return action_9
         else:
+            time.sleep(1)
+            print("An ethereal hammer flies through the air and strikes you!")
+            player_character.health -= 10
             return action_9
-    else:
-        time.sleep(1)
-        return action_9
-    #else:
-    #    time.sleep(1)
-    #    print("Your path is blocked.")
-    #    return action_6
 
 
 def action_8():
@@ -334,11 +295,9 @@ def action_8():
                 inventory["gold"] += reward  # Add the reward to the inventory
                 total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
                 time.sleep(1)
-                print("You find a key!")
-                item_2 = Item(name="Key", weight=1, defense=0)
-                add_to_backpack(item_2)
                 print("\n")
-                print_backpack()
+                player_character.print_inventory()
+                print("\n")
                 time.sleep(1)
                 print("You return to the previous room.")
                 return action_6
@@ -459,17 +418,18 @@ def action_13():
                 total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
                 time.sleep(1)
                 print("You find a Studded Leather Vest!")
-                armor_1 = ChestArmor(name="Studded Leather Vest", weight=2, defense=20)
-                add_to_backpack(armor_1)
+                armor_1 = ChestArmor(name="Studded Leather Vest", weight=2, defense=10)
                 print("\n")
-                print_backpack()
+                player_character.print_inventory()
+                print("\n")
                 print("Equip the Studded Leather Vest?")
                 response = get_input("Y, N")
                 if response == "y":
                     print("You have equipped the Studded Leather Vest!")
-                    player_character.defense += 20
+                    player_character.ChestArmor = armor_1
                     return action_14
                 else:
+                    player_character.inventory.append(armor_1)
                     return action_14
             elif result == "defeat":
                 return action_exit
@@ -485,68 +445,69 @@ def action_14():
     print("You enter the west room(14).")
     print("Spikes shoot out of the walls, nearly hitting you.")
     print("They receed. Do you move forward(f) or wait(w)?")
-    response = get_input("F, W")
-    if response == "f":
-        time.sleep(1)
-        print("You cross into the room and spikes close behind you.")
-        time.sleep(1)
-        print("In the center of the room")
-        print("Blocks are in the shape of a diamond.")
-        print("Do you inspect them?")
-        response = get_input("Y, N")
-        if response == "y":
-            time.sleep(1)
-            print("You find a hidden passageway!")
-            return action_15
-        elif response == "n":
-            time.sleep(1)
-            print("Spikes shoot out of the walls and receed.")
-            time.sleep(1)
-            print("Do you move forward(f) or wait(w)?")
-            response = get_input("F, W")
-            if response == "f":
-                time.sleep(1)
-                print("Spikes shoot out of the walls and kill you dead!")
-                return action_exit
-            elif response == "w":
-                time.sleep(1)
-                print("You cross into the room and spikes close behind you.")
-                time.sleep(1)
-                print("In the center of the room")
-                print("Blocks are in the shape of a diamond.")
-                print("Do you inspect them?")
-                response = get_input("Y, N")
-                if response == "y":
-                    time.sleep(1)
-                    print("You find a hidden passageway!")
-                    return action_15
-    elif response == "w":
-        time.sleep(1)
-        print("Spikes shoot out of the walls and receed.")
-        time.sleep(1)
-        print("Do you move forward(f) or wait(w)?")
+    while True:
         response = get_input("F, W")
         if response == "f":
             time.sleep(1)
-            print("Spikes shoot out of the walls and kill you dead!")
-            return action_exit
+            print("You cross into the room and spikes close behind you.")
+            time.sleep(1)
+            print("In the center of the room")
+            print("Blocks are in the shape of a diamond.")
+            print("Do you inspect them?")
+            response = get_input("Y, N")
+            if response == "y":
+                time.sleep(1)
+                print("You find a hidden passageway!")
+                return action_15
+            elif response == "n":
+                time.sleep(1)
+                print("Spikes shoot out of the walls and receed.")
+                time.sleep(1)
+                print("Do you move forward(f) or wait(w)?")
+                response = get_input("F, W")
+                if response == "f":
+                    time.sleep(1)
+                    print("Spikes shoot out of the walls and kill you dead!")
+                    return action_exit
+                elif response == "w":
+                    time.sleep(1)
+                    print("You cross into the room and spikes close behind you.")
+                    time.sleep(1)
+                    print("In the center of the room")
+                    print("Blocks are in the shape of a diamond.")
+                    print("Do you inspect them?")
+                    response = get_input("Y, N")
+                    if response == "y":
+                        time.sleep(1)
+                        print("You find a hidden passageway!")
+                        return action_15
         elif response == "w":
-            print("'What are you so afraid of?,' you hear in the distance.")
             time.sleep(1)
             print("Spikes shoot out of the walls and receed.")
             time.sleep(1)
             print("Do you move forward(f) or wait(w)?")
             response = get_input("F, W")
             if response == "f":
-                print("You hear laughter, possibly from the creator.")
                 time.sleep(1)
                 print("Spikes shoot out of the walls and kill you dead!")
                 return action_exit
             elif response == "w":
-                print("You hear laughter, possibly from the creator.")
+                print("'What are you so afraid of?,' you hear in the distance.")
                 time.sleep(1)
-                print("Spikes shoot out of the walls and kill you dead!")
-                return action_exit
+                print("Spikes shoot out of the walls and receed.")
+                time.sleep(1)
+                print("Do you move forward(f) or wait(w)?")
+                response = get_input("F, W")
+                if response == "f":
+                    print("You hear laughter, possibly from the creator.")
+                    time.sleep(1)
+                    print("Spikes shoot out of the walls and kill you dead!")
+                    return action_exit
+                elif response == "w":
+                    print("You hear laughter, possibly from the creator.")
+                    time.sleep(1)
+                    print("Spikes shoot out of the walls and kill you dead!")
+                    return action_exit
 
 
 
@@ -556,9 +517,10 @@ def action_15():
     print("You climb down stairs and see a pillar of light.")
     print("You follow the light and find a Bow!")
     weapon_2 = Weapon(name="Bow", weight=2, attack=1)
-    add_to_backpack(weapon_2)
+    player_character.inventory.append(weapon_2)
     print("\n")
-    print_backpack()
+    player_character.print_inventory()
+    print("\n")
     print("You retrace your steps(15).")
     return action_11
 
@@ -588,10 +550,10 @@ def action_16():
                 total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
                 time.sleep(1)
                 print("You find a Boomerang!")
-                item_4 = Item(name="Boomerang", weight=2, defense=20)
-                add_to_backpack(item_4)
+                item_4 = Item(name="Boomerang", weight=2, defense=0)
+                player_character.inventory.append(item_4)
                 print("\n")
-                print_backpack()
+                player_character.print_inventory()
                 return action_17
             elif result == "defeat":
                 print(f"{spawned_demon.name} shatters your skull with a boomerang!")
@@ -612,36 +574,50 @@ def action_17():
     print("You step into the room and a giant blue hand comes out of the wall.")
     print("It moves toward you and then disapears into the wall.")
     print("Do you proceed?")
-    response = get_input("Y, N")
-    if response == "y":
-        time.sleep(1)
-        print("The hand covers your path and once again disappears into the wall.")
-        print("Do you proceed?")
+    while True:
         response = get_input("Y, N")
         if response == "y":
             time.sleep(1)
-            print("You move forward one block.")
-            print("A pillar is to your right. Do you hide?")
+            print("The hand covers your path and once again disappears into the wall.")
+            print("Do you proceed?")
             response = get_input("Y, N")
             if response == "y":
                 time.sleep(1)
-                print("A hand moves down the hallway and disappears.")
-                print("You move forward another block.")
+                print("You move forward one block.")
                 print("A pillar is to your right. Do you hide?")
                 response = get_input("Y, N")
                 if response == "y":
+                    time.sleep(1)
                     print("A hand moves down the hallway and disappears.")
                     print("You move forward another block.")
-                    print("A pillar is to your left. Do you hide?")
+                    print("A pillar is to your right. Do you hide?")
                     response = get_input("Y, N")
                     if response == "y":
+                        print("A hand moves down the hallway and disappears.")
+                        print("You move forward another block.")
+                        print("A pillar is to your left. Do you hide?")
+                        response = get_input("Y, N")
+                        if response == "y":
+                            time.sleep(1)
+                            print("The giant blue hand grabs you and returns you")
+                            print("to the beginning of the dungeon. You cry in shame.")
+                            return action_2
+                        elif response == "n":
+                            time.sleep(1)
+                            print("The door is locked.")
+                            for item in player_character.inventory:
+                                if item.name == "Key":
+                                    print("Door was unlocked. You enter.")
+                                    return action_18
+                                print("You couldn't unlock the door.")
+                                print("The giant blue hand grabs you and returns you")
+                                print("to the beginning of the dungeon. You cry in shame.")
+                                return action_2
+                    elif response == "n":
                         time.sleep(1)
                         print("The giant blue hand grabs you and returns you")
                         print("to the beginning of the dungeon. You cry in shame.")
                         return action_2
-                    elif response == "n":
-                        time.sleep(1)
-                        return action_18
                 elif response == "n":
                     time.sleep(1)
                     print("The giant blue hand grabs you and returns you")
@@ -649,15 +625,10 @@ def action_17():
                     return action_2
             elif response == "n":
                 time.sleep(1)
-                print("The giant blue hand grabs you and returns you")
-                print("to the beginning of the dungeon. You cry in shame.")
-                return action_2
-        elif response == "n":
+                return action_17
+        else:
             time.sleep(1)
             return action_17
-    else:
-        time.sleep(1)
-        return action_17
 
 
 def action_18():
@@ -671,7 +642,7 @@ def action_18():
     time.sleep(2)
     print("He slowly turns around and brushes back his hood.")
     time.sleep(2)
-    print(f"Hello, {name}. I was hoping you'd make it this far.")
+    print(f"Hello, {player_character.name}. I was hoping you'd make it this far.")
     time.sleep(2)
     print("A sinister smile spreads across his face and his body transforms.")
     time.sleep(2)
@@ -680,46 +651,47 @@ def action_18():
     print("A black dragon stands before you. He roars and shoots a fireball over your head.")
     time.sleep(2)
     print("Are you ready?")
-    response = get_input("Y, N")
-    if response == "y":
-        time.sleep(1)
-        # Start the combat loop
-        while player_character.health > 0 and Alistair.health > 0:
-            # Display the current health of each character
-            print(f"{player_character.name}'s health: {player_character.health}")
-            print(f"{Alistair.name}'s health: {Alistair.health}")
-
-    # Display the options to the player
-            print("\n")
-            print("What would you like to do?")
-            choice = get_input("1: Attack \n2: Defend \n3: Run")
-
-# Handle the player's choice
-            if choice == "1":
-                player_character.attack(Alistair)
-            elif choice == "2":
-                player_character.defend()
-            elif choice == "3":
-                if player_character.run():
-                    print("Alistair cooks your body and eats you whole!")
-                    return action_exit
-            if random.random() <= 0.9:
-                Alistair.attack(player_character)
-            else:
-                Alistair.defend()
-        if Alistair.health == 0:
-            reward = random.randint(2, 10)  # Generate a random number between 2 and 10
-            print(
-                f"You kill Alistair!\n"
-                f"You find {reward} gold pieces!"
-            )
-            inventory["gold"] += reward  # Add the reward to the inventory
-            total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
+    while True:
+        response = get_input("Y, N")
+        if response == "y":
             time.sleep(1)
-            return action_19
-    elif response == "n":
-        print("You are a coward who deserves eternity in the dungeon!")
-        sys.exit
+            # Start the combat loop
+            while player_character.health > 0 and Alistair.health > 0:
+                # Display the current health of each character
+                print(f"{player_character.name}'s health: {player_character.health}")
+                print(f"{Alistair.name}'s health: {Alistair.health}")
+
+        # Display the options to the player
+                print("\n")
+                print("What would you like to do?")
+                choice = get_input("1: Attack \n2: Defend \n3: Run")
+
+    # Handle the player's choice
+                if choice == "1":
+                    player_character.attack(Alistair)
+                elif choice == "2":
+                    player_character.defend()
+                elif choice == "3":
+                    if player_character.run():
+                        print("Alistair cooks your body and eats you whole!")
+                        return action_exit
+                if random.random() <= 0.9:
+                    Alistair.attack(player_character)
+                else:
+                    Alistair.defend()
+            if Alistair.health == 0:
+                reward = random.randint(2, 10)  # Generate a random number between 2 and 10
+                print(
+                    f"You kill Alistair!\n"
+                    f"You find {reward} gold pieces!"
+                )
+                inventory["gold"] += reward  # Add the reward to the inventory
+                total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
+                time.sleep(1)
+                return action_19
+        elif response == "n":
+            print("You are a coward who deserves eternity in the dungeon!")
+            sys.exit
 
 
 def action_19():

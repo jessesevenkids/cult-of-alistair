@@ -102,7 +102,6 @@ class FeetArmor(BaseArmor):
         return self.__str__()
 
 
-
 class Accessory:
     def __init__(self, name, weight, defense):
         self.name = name
@@ -119,11 +118,11 @@ class Accessory:
 class Weapon:
     def __init__(self, name, weight, attack):
         self.weight = weight
-        self.attack = attack
+        self.attackPower = attack
         self.name = name
 
     def __str__(self):
-        return f"{self.name}: Weight: {self.weight}  -  Attack: {self.attack}"
+        return f"{self.name}: Weight: {self.weight}  -  Attack: {self.attackPower}"
 
     def __repr__(self):
         return self.__str__()
