@@ -244,15 +244,15 @@ def action_7():
     time.sleep(1)
     print("\n")
     print("You enter the west room(7).")
-    print("The room is safe.") 
+    print("The room is safe.")
     print("A statue is in the middle of the room.")
     print("Do you want to inspect it?")
-    while True: 
+    while True:
         response = get_input("Y, N")
         if response == "y":
             print("It's a stone statue of a large man,")
             print("wearing a winged helmet, and holding a hammer.")
-            print("There's an inscription that reads:") 
+            print("There's an inscription that reads:")
             print("Pray before Thor Odinson for strength.")
             print("Do you pray?")
             response = get_input("Y, N")
@@ -769,6 +769,8 @@ def run_battle(player, enemy):
     print("*" * 30)
     round = 1
     while True:
+        player.temp_defense = 0
+        enemy.temp_defense = 0
         print("")
         print(f"Round {round}")
         print(f"{player.name} Health: {player.health}")

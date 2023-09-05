@@ -1,17 +1,19 @@
 import random
 from rad_alistair.item import HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor
 
+
 class Character:
     def __init__(self, name, health, attackPower, defense):
         self.name = name
         self.health = health
         self.base_attack = attackPower
         self.base_defense = defense
+        self.temp_defense = 0
 
         # Equipment slots
         self.lhand = None
         self.rhand = None
-        self.head = None 
+        self.head = None
         self.chest = None
         self.waist = None
         self.legs = None
@@ -21,13 +23,13 @@ class Character:
 
         # Inventory
         self.inventory = []
-    
+
     def print_inventory(self):
         max_len = 9
         for item in self.inventory:
             item_len = len(item.name)
             if item_len > max_len:
-                max_len = item_len 
+                max_len = item_len
 
         column = max_len + 4
         print("=" * column)
@@ -94,16 +96,15 @@ class Character:
         if self.waist:
             total += self.waist.defense
         if self.legs:
-            total +=self.legs.defense
+            total += self.legs.defense
         if self.feet:
             total += self.feet.defense
         if self.accessory:
             total += self.accessory.defense
         if self.accessory2:
             total += self.accessory2.defense
-        return total 
+        return total
 
-    
     @property
     def attackPower(self):
         total = self.base_attack
@@ -141,7 +142,6 @@ class Character:
             total += self.accessory2.attackPower
         return total
 
-
     def attack(self, enemy):
         print(f"{self.name} attacks {enemy.name}!")
         try:
@@ -168,15 +168,12 @@ class Character:
 
     def defend(self):
         print(f"{self.name} defends against the enemy attack.")
-        self.health += round(self.health * 0.10)
-        print(f"{self.name}'s health is now {self.health}.")
-
+        self.temp_defense = 10
 
     def pray(self):
         print(f"{self.name} You pray to Thor Odinson!.")
         self.health += int(self.health * 0.25)
         print(f"{self.name}'s health is now {self.health}.")
-
 
     def is_alive(self):
         if self.health > 0:
