@@ -182,6 +182,7 @@ class Character:
         self.health += 20
         print(f"{self.name}'s health is now {self.health}.")
 
+
     def is_alive(self):
         if self.health > 0:
             return True
@@ -204,12 +205,18 @@ def spawn_skeleton():
         health = random.randint(80, 300)
         attack = random.randint(10, 40)
         defense = random.randint(5, 30)
+        skeleton = Character(name, health, attack, defense)
+        skeleton.equip_head(HeadArmor.new())
+        skeleton.equip_chest(ChestArmor.new())
+        skeleton.equip_legs(LegArmor.new())
+        skeleton.equip_feet(FeetArmor.new())
     else:
         name = "Skeleton"
         health = random.randint(40, 80)
         attack = random.randint(5, 15)
         defense = random.randint(1, 10)
-    return Character(name, health, attack, defense)
+        skeleton = Character(name, health, attack, defense)
+    return skeleton
 
 
 def spawn_bat():
@@ -234,12 +241,18 @@ def spawn_demon():
         health = random.randint(80, 300)
         attack = random.randint(15, 40)
         defense = random.randint(5, 30)
+        demon = Character(name, health, attack, defense)
+        demon.equip_head(HeadArmor.new())
+        demon.equip_chest(ChestArmor.new())
+        demon.equip_legs(LegArmor.new())
+        demon.equip_feet(FeetArmor.new())
     else:
         name = "Demon"
         health = random.randint(60, 100)
         attack = random.randint(10, 20)
         defense = random.randint(3, 8)
-    return Character(name, health, attack, defense)
+        demon = Character(name, health, attack, defense)
+    return demon
 
 
 def spawn_enemy():
