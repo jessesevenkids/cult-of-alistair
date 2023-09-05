@@ -21,8 +21,15 @@ class Character:
         self.accessory = None
         self.accessory2 = None
 
+        self.ability = []
         # Inventory
         self.inventory = []
+    
+    def has_key(self):
+        for item in self.inventory:
+            if item.name.lower() == "key":
+                return True
+        return False
 
     def print_inventory(self):
         max_len = 9
@@ -172,7 +179,7 @@ class Character:
 
     def pray(self):
         print(f"{self.name} You pray to Thor Odinson!.")
-        self.health += int(self.health * 0.25)
+        self.health += 20
         print(f"{self.name}'s health is now {self.health}.")
 
     def is_alive(self):
@@ -182,7 +189,7 @@ class Character:
             return False
 
     def run(self):
-        if random.random() <= 0.5:
+        if random.random() <= 0.99:
             print(f"{self.name} successfully flees from the enemy!")
             return True
         else:

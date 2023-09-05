@@ -260,6 +260,7 @@ def action_7():
                 print("You are healed and power surges through your veins!")
                 player_character.health += 25
                 player_character.base_attack += 5
+                player_character.ability.append("pray")
                 time.sleep(1)
                 return action_9
             else:
@@ -605,10 +606,10 @@ def action_17():
                         elif response == "n":
                             time.sleep(1)
                             print("The door is locked.")
-                            for item in player_character.inventory:
-                                if item.name == "Key":
-                                    print("Door was unlocked. You enter.")
-                                    return action_18
+                            if player_character.has_key():
+                                print("Door was unlocked. You enter.")
+                                return action_18
+                            else:
                                 print("You couldn't unlock the door.")
                                 print("The giant blue hand grabs you and returns you")
                                 print("to the beginning of the dungeon. You cry in shame.")
@@ -664,7 +665,7 @@ def action_18():
         # Display the options to the player
                 print("\n")
                 print("What would you like to do?")
-                choice = get_input("1: Attack \n2: Defend \n3: Run")
+                choice = get_input("1: Attack \n2: Defend \n3: Pray")
 
     # Handle the player's choice
                 if choice == "1":
@@ -672,9 +673,7 @@ def action_18():
                 elif choice == "2":
                     player_character.defend()
                 elif choice == "3":
-                    if player_character.run():
-                        print("Alistair cooks your body and eats you whole!")
-                        return action_exit
+                    player.character.pray()
                 if random.random() <= 0.9:
                     Alistair.attack(player_character)
                 else:
@@ -690,7 +689,7 @@ def action_18():
                 time.sleep(1)
                 return action_19
         elif response == "n":
-            print("You are a coward who deserves eternity in the dungeon!")
+            print("Alistair cooks your body and eats you whole!")
             sys.exit
 
 
@@ -775,17 +774,33 @@ def run_battle(player, enemy):
         print(f"Round {round}")
         print(f"{player.name} Health: {player.health}")
         print(f"{enemy.name} Health: {enemy.health}")
-        choice = get_input("1: Attack \n2: Defend \n3: Run")
-        if choice == "1":
-            player.attack(enemy)
-        elif choice == "2":
-            player.defend()
-        elif choice == "3":
-            if player.run():
-                print(f"{enemy.name} hacks you up into little bits!")
-                return "defeat"
+        if "pray" in player_character.ability:
+            choice = get_input("1: Attack \n2: Defend \n3: Pray \n4: Run")
+            if choice == "1":
+                player.attack(enemy)
+            elif choice == "2":
+                player.defend()
+            elif choice == "3":
+                player.pray()
+            elif choice == "4":
+                if player.run():
+                    print(f"{enemy.name} hacks you up into little bits!")
+                    return "defeat"
             else:
                 return "draw"
+        
+        else:
+            choice = get_input("1: Attack \n2: Defend \n3: Run")
+            if choice == "1":
+                player.attack(enemy)
+            elif choice == "2":
+                player.defend()
+            elif choice == "3":
+                if player.run():
+                    print(f"{enemy.name} hacks you up into little bits!")
+                    return "defeat"
+                else:
+                    return "draw"
         if not player.is_alive():
             return "defeat"
         if not enemy.is_alive():
