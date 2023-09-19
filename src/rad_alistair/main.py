@@ -2,11 +2,10 @@ import sys
 import random
 import time
 
-from rad_alistair.character import Character, spawn_bat, spawn_demon, spawn_skeleton
+from rad_alistair.character import Character, spawn_bat, spawn_demon, spawn_skeleton, spawn_Alistair
 from rad_alistair.item import Item, Helmet, BaseArmor, HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor, Accessory, Weapon
 
 player_character = Character("Marshmellow", 100, 20, 10)
-Alistair = Character("Alistair", 200, 20, 10)
 
 
 introduction = '''You awake but don't open your eyes.
@@ -50,6 +49,8 @@ def action_1():
     print("\n")
     print("A simple quest of finding a missing child\nended with you captured by the Cult of Alistair.\nNow you're in a dungeon and your sword is gone.\nYou take the torch and walk down the hallway.")
     item_1 = Item(name="Torch", weight=1, defense=0)
+#    if player_character.has_torch():
+#        player_character.inventory.remove(item_1)
     player_character.inventory.append(item_1)
     print("\n")
     player_character.print_inventory()
@@ -63,6 +64,10 @@ def action_2():
     print("The first room is empty but has 3 doors.")
     print("One to the West, North, and East.")
     print("You can hear people talking in the distance.")
+    if player_character.has_map():
+        print("\n")
+        print("The Map indicates a treasure is in the west room.")
+        print("\n")
     print("Which do you choose?")
     while True:
         response = get_input("W, N, E")
@@ -82,8 +87,11 @@ def action_3():
     global total_victories
     time.sleep(1)
     print("\n")
+    if player_character.has_key():
+        print("The room is empty. You return to previous room.")
+        return action_2
     print("You enter the west room(3).")
-    print("Bats flutter overheard.")
+    print("Bats flutter overhead.")
     print("The room is otherwise empty")
     print("Would you like to search the room?")
     while True:
@@ -258,6 +266,7 @@ def action_7():
             response = get_input("Y, N")
             if response == "y":
                 print("You are healed and power surges through your veins!")
+                ("\nYou have learned the ability Pray!")
                 player_character.health += 25
                 player_character.base_attack += 5
                 player_character.ability.append("pray")
@@ -277,6 +286,9 @@ def action_8():
     global total_victories
     time.sleep(1)
     print("\n")
+    if player_character.has_map():
+        print("The room is empty. You return to previous room.")
+        return action_7
     print("You enter the east room(8).")
     print("Bats fly overhead.")
     print("Do you want to inspect the room?")
@@ -295,6 +307,12 @@ def action_8():
                 )
                 inventory["gold"] += reward  # Add the reward to the inventory
                 total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
+                ("\n")
+                print("You find a Map!")
+                print("To use map, press 'm'")
+                ("\n")
+                item_3 = Item(name="Map", weight=1, defense=0)
+                player_character.inventory.append(item_3)
                 time.sleep(1)
                 print("\n")
                 player_character.print_inventory()
@@ -365,6 +383,11 @@ def action_11():
     print("There are doors to the north and east.")
     print("Slimes are sliming around.")
     print("They're easy to dodge.")
+    if player_character.has_map():
+        print("\n")
+        print("The Map indicates a treasure to the north and east.")
+        print("East is also the direction of the exit.")
+        print("\n")
     print("Which door do you choose?")
     while True:
         response = get_input("N, E")
@@ -379,6 +402,10 @@ def action_11():
 def action_12():
     time.sleep(1)
     print("\n")
+    if player_character.has_bow():
+        print("There is no reason to go that direction.")
+        print("You return to previous room.")
+        return action_11
     print("You enter the north room(12).")
     print("There's a narrow walkway leading to a door to the north.")
     print("Water lies on both sides of the walkway.")
@@ -510,13 +537,12 @@ def action_14():
                     print("Spikes shoot out of the walls and kill you dead!")
                     return action_exit
 
-
-
 def action_15():
     time.sleep(1)
     print("\n")
     print("You climb down stairs and see a pillar of light.")
     print("You follow the light and find a Bow!")
+    time.sleep(1)
     weapon_2 = Weapon(name="Bow", weight=2, attack=1)
     player_character.inventory.append(weapon_2)
     print("\n")
@@ -525,12 +551,14 @@ def action_15():
     print("You retrace your steps(15).")
     return action_11
 
-
 def action_16():
     global total_deaths
     global total_victories
     time.sleep(1)
     print("\n")
+    if player_character.has_boomerang():
+        print("The room is empty. You go through the east door.")
+        return action_17
     print("You enter the east room(16).")
     print("Demons are playing with boomerangs.")
     print("One sees you, smiles, and throws a boomerang at you.")
@@ -574,6 +602,13 @@ def action_17():
     print("There is a locked door to the north")
     print("You step into the room and a giant blue hand comes out of the wall.")
     print("It moves toward you and then disapears into the wall.")
+    if player_character.has_map():
+        print("\n")
+        print("There's a note on the map that reads:")
+        print("I was safe behind the pillars to my right.")
+        print("However, a blue hand grabbed me when I ")
+        print("hid behind the pillar to my left.")
+        print("\n")
     print("Do you proceed?")
     while True:
         response = get_input("Y, N")
@@ -652,46 +687,26 @@ def action_18():
     print("A black dragon stands before you. He roars and shoots a fireball over your head.")
     time.sleep(2)
     print("Are you ready?")
+    spawned_Alistair = spawn_Alistair()
     while True:
         response = get_input("Y, N")
         if response == "y":
             time.sleep(1)
-            # Start the combat loop
-            while player_character.health > 0 and Alistair.health > 0:
-                # Display the current health of each character
-                print(f"{player_character.name}'s health: {player_character.health}")
-                print(f"{Alistair.name}'s health: {Alistair.health}")
-
-        # Display the options to the player
-                print("\n")
-                print("What would you like to do?")
-                choice = get_input("1: Attack \n2: Defend \n3: Pray")
-
-    # Handle the player's choice
-                if choice == "1":
-                    player_character.attack(Alistair)
-                elif choice == "2":
-                    player_character.defend()
-                elif choice == "3":
-                    player.character.pray()
-                if random.random() <= 0.9:
-                    Alistair.attack(player_character)
-                else:
-                    Alistair.defend()
-            if Alistair.health == 0:
+            result = run_battle_Alistair(player_character, spawned_Alistair)
+            if result == "victory":
                 reward = random.randint(2, 10)  # Generate a random number between 2 and 10
                 print(
-                    f"You kill Alistair!\n"
+                    f"You have defeated Alistair!\n"
                     f"You find {reward} gold pieces!"
                 )
                 inventory["gold"] += reward  # Add the reward to the inventory
                 total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
                 time.sleep(1)
                 return action_19
-        elif response == "n":
-            print("Alistair cooks your body and eats you whole!")
-            sys.exit
-
+            elif result == "defeat":
+                total_deaths += 1
+                print(f"You are a disappointment to your father. Inigo Montoya is also disappointed!")
+                return action_exit
 
 def action_19():
     time.sleep(2)
@@ -758,6 +773,9 @@ def get_input(text):
         if response in ("equip", ):
             print(" ")
             response = input("> ")
+        if response in ("map", "m"):
+            print_map()
+            response = input("> ") 
         else:
             return response
 
@@ -818,6 +836,67 @@ def run_battle(player, enemy):
 
         round += 1
 
+def run_battle_Alistair(player, enemy):
+    if player_character.has_bow():
+        print("You fire two arrows. One arrow pierces Alistair's wing.")
+        print("The second arrow sticks in his chest. He roars in pain.")
+        enemy.health -= 100
+        enemy.base_attack -= 5
+        enemy.base_defense -= 5
+    print("*" * 30)
+    print(f"Combat: {player.name} vs {enemy.name}")
+    print("*" * 30)
+    round = 1
+    while True:
+        player.temp_defense = 0
+        enemy.temp_defense = 0
+        print("")
+        print(f"Round {round}")
+        print(f"{player.name} Health: {player.health}")
+        print(f"{enemy.name} Health: {enemy.health}")
+        if "pray" in player_character.ability:
+            choice = get_input("1: Attack \n2: Defend \n3: Pray \n4: Run")
+            if choice == "1":
+                player.attack(enemy)
+            elif choice == "2":
+                player.defend()
+            elif choice == "3":
+                player.pray()
+            elif choice == "4":
+                if player.run():
+                    print(f"{enemy.name} hacks you up into little bits!")
+                    return "defeat"
+            else:
+                return "draw"
+        
+        else:
+            choice = get_input("1: Attack \n2: Defend \n3: Run")
+            if choice == "1":
+                player.attack(enemy)
+            elif choice == "2":
+                player.defend()
+            elif choice == "3":
+                if player.run():
+                    print(f"{enemy.name} hacks you up into little bits!")
+                    return "defeat"
+                else:
+                    return "draw"
+        if not player.is_alive():
+            return "defeat"
+        if not enemy.is_alive():
+            return "victory"
+
+        print(f"{enemy.name} attacks!")
+        if random.randint(0, 5) == 1:
+            enemy.defend()
+        else:
+            enemy.attack(player)
+        if not player.is_alive():
+            return "defeat"
+        if not enemy.is_alive():
+            return "victory"
+
+        round += 1
 
 def event_loop():
     current_action = None
@@ -841,3 +920,27 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+def print_map(): 
+    print('''
+                                                                     
+     ____________________________________________________
+    |            ______ ______                           |
+    |           |      |      |                          |
+    |           |  14     13  |                          |
+    |           |__  __|__  __|       ______ ______      |
+    |           |T     |      |      |B     |      |     |
+    |           |  15  |  12  |      |  18     19        |
+    |     ______|______|__  __|______|__  __|______|     |
+    |    |      |      |      |T     |      |            |
+    |    |  10      9     11     16     17  |            |
+    |    |______|__  __|______|______|______|            |
+    |           |      |      |      |                   |
+    |           |   7      6      8  |                   | 
+    |           |______|__  __|______|                   |
+    |                  |      |                          |
+    |                  |   4  |                          |
+    |            ______|__  __|______                    |
+    |           |T     |      |      |                   |
+    |           |   3      2      5  |                   |
+    |___________|______|______|______|___________________| ''')

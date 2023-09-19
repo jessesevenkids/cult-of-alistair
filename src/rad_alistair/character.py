@@ -25,11 +25,35 @@ class Character:
         # Inventory
         self.inventory = []
     
+    def has_torch(self):
+        for item in self.inventory:
+            if item.name.lower() == "torch":
+                return True
+        return False
+
     def has_key(self):
         for item in self.inventory:
             if item.name.lower() == "key":
                 return True
         return False
+
+    def has_map(self):
+        for item in self.inventory:
+            if item.name.lower() == "map":
+                return True
+        return False
+
+    def has_bow(self):
+        for item in self.inventory:
+            if item.name.lower() == "bow":
+                return True
+        return False    
+
+    def has_boomerang(self):
+        for item in self.inventory:
+            if item.name.lower() == "boomerang":
+                return True
+        return False 
 
     def print_inventory(self):
         max_len = 9
@@ -189,6 +213,12 @@ class Character:
         else:
             return False
 
+    def Alistair_is_alive(Alistair):
+        if Alistair.health > 0:
+            return True
+        else:
+            return False
+
     def run(self):
         if random.random() <= 0.99:
             print(f"{self.name} successfully flees from the enemy!")
@@ -200,7 +230,7 @@ class Character:
 
 def spawn_skeleton():
     # 1 in 100 chance of special skeleton
-    if random.randint(1, 100) == 1:
+    if random.randint(1, 25) == 1:
         name = "Elite Skeleton"
         health = random.randint(80, 300)
         attack = random.randint(10, 40)
@@ -221,7 +251,7 @@ def spawn_skeleton():
 
 def spawn_bat():
     # 1 in 100 chance of special bat
-    if random.randint(1, 100) == 1:
+    if random.randint(1, 25) == 1:
         name = "Mongrel Bat"
         health = random.randint(40, 100)
         attack = random.randint(5, 30)
@@ -236,7 +266,7 @@ def spawn_bat():
 
 def spawn_demon():
     # 1 in 100 chance of special demon
-    if random.randint(1, 100) == 1:
+    if random.randint(1, 25) == 1:
         name = "Shiny Demon"
         health = random.randint(80, 300)
         attack = random.randint(15, 40)
@@ -254,6 +284,25 @@ def spawn_demon():
         demon = Character(name, health, attack, defense)
     return demon
 
+def spawn_Alistair():
+    # 1 in 100 chance of special Alistair
+    if random.randint(1, 50) == 1:
+        name = "Awesome Alistair"
+        health = random.randint(700, 1000)
+        attack = random.randint(50, 75)
+        defense = random.randint(40, 55)
+        Alistair = Character(name, health, attack, defense)
+        Alistair.equip_head(HeadArmor.new())
+        Alistair.equip_chest(ChestArmor.new())
+        Alistair.equip_legs(LegArmor.new())
+        Alistair.equip_feet(FeetArmor.new())
+    else:
+        name = "Alistair"
+        health = random.randint(500, 600)
+        attack = random.randint(35, 55)
+        defense = random.randint(25, 40)
+        Alistair = Character(name, health, attack, defense)
+    return Alistair
 
 def spawn_enemy():
     val = random.randint(1, 11)
