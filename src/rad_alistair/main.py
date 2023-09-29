@@ -2,11 +2,10 @@ import sys
 import random
 import time
 
-from rad_alistair.character import Character, spawn_bat, spawn_demon, spawn_skeleton, spawn_Alistair
+from rad_alistair.character import Character, spawn_bat, spawn_demon, spawn_skeleton, spawn_Alistair, spawn_MADMAN
 from rad_alistair.item import Item, Helmet, BaseArmor, HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor, Accessory, Weapon
 
 player_character = Character("Marshmellow", 100, 20, 10)
-
 
 introduction = '''You awake but don't open your eyes.
 Your head throbs and an
@@ -28,14 +27,12 @@ inventory = {
     "backpack": [],
 }
 
-
 def check_backpack(search_name):
     backpack = inventory["backpack"]
     for item in backpack:
         if getattr(item, "name", None) == search_name:
             return True
     return False
-
 
 def action_1():
     print("\nYou're in a small room.")
@@ -49,14 +46,12 @@ def action_1():
     print("\n")
     print("A simple quest of finding a missing child\nended with you captured by the Cult of Alistair.\nNow you're in a dungeon and your sword is gone.\nYou take the torch and walk down the hallway.")
     item_1 = Item(name="Torch", weight=1, defense=0)
-#    if player_character.has_torch():
-#        player_character.inventory.remove(item_1)
-    player_character.inventory.append(item_1)
+    if not player_character.has_torch():
+        player_character.inventory.append(item_1)
     print("\n")
     player_character.print_inventory()
     time.sleep(3)
     return action_2
-
 
 def action_2():
     print("\n")
@@ -80,7 +75,6 @@ def action_2():
         elif response == "e":
             time.sleep(1)
             return action_5
-
 
 def action_3():
     global total_deaths
@@ -112,7 +106,6 @@ def action_3():
             time.sleep(1)
             print("You return to main room")
             return action_2
-
 
 def action_4():
     global total_deaths
@@ -150,8 +143,6 @@ def action_4():
         if choice == "2":
             print("You enter the door to the north.")
             return action_6
-
-
 
 def action_5():
     global total_deaths
@@ -209,7 +200,6 @@ def action_5():
             time.sleep(1)
             return action_2
 
-
 def action_6():
     global total_deaths
     global total_victories
@@ -246,7 +236,6 @@ def action_6():
             elif result == "defeat":
                 return action_exit
 
-
 def action_7():
     global inventory
     time.sleep(1)
@@ -279,7 +268,6 @@ def action_7():
             print("An ethereal hammer flies through the air and strikes you!")
             player_character.health -= 10
             return action_9
-
 
 def action_8():
     global total_deaths
@@ -331,7 +319,6 @@ def action_8():
             print("You return to the previous room.")
             return action_6
 
-
 def action_9():
     time.sleep(1)
     print("\n")
@@ -359,22 +346,61 @@ def action_9():
             time.sleep(1)
             return action_11
 
-
 def action_10():
+    global total_deaths
+    global total_victories
     time.sleep(2)
     print("\n")
-    print("You enter the west room(10).")
-    print("An old man is sitting by a fire.")
-    time.sleep(2)
-    print("He looks at you and says,")
-    time.sleep(2)
+    armor_2 = Item(name="MADMAN Boots", weight=1, defense=5)
+    if player_character.feet == armor_2:
+        print("You enter the west room(10).")
+        print("The room is covered in the MADMAN's blood.")
+        print("His body parts lay strewn over the ground and")
+        print("His intestines hang from the wall like garland.")
+        print("Perhaps there's something wrong with you?")
+        return action_9
+    else:
+        print("You enter the west room(10).")
+        print("An old man is sitting by a fire.")
+        time.sleep(2)
+        print("He looks at you and says,")
+        time.sleep(2)
+        if player_character.has_map():
+            print("'You have my Map!'")
+            print("His eyes widen and he licks his lips.")
+            print("MADMAN runs at you and attacks!")
+            time.sleep(1)
+            spawned_MADMAN = spawn_MADMAN()
+            print(f"A {spawned_MADMAN.name} attacks you")
+            print("\n")
+            result = run_battle(player_character, spawned_MADMAN)
+            if result == "victory":
+                reward = random.randint(2, 10)  # Generate a random number between 2 and 10
+                print(
+                    f"You kill {spawned_MADMAN.name}!\n"
+                    f"You find {reward} gold pieces!"
+                )
+                inventory["gold"] += reward  # Add the reward to the inventory
+                total_victories += 1  # Update the victory counter by adding 1 to whatever it currently is at
+                print("\n")
+                print("The dead MADMAN wears neat shoes.")
+                print("Shoes that you want...")
+                print("\n")
+                print("You take the MADMAN Boots!")
+                player_character.FeetArmor = armor_2
+                print("\n")
+                player_character.print_inventory()
+                print("\n")
+                return action_9
+            elif result == "defeat":
+                print("MADMAN beats you to death with your own shoes!")
+                return action_exit
     print("Eastmost Penninsula is the secret!")
     time.sleep(2)
     print("You don't understand and slowly back away.")
     time.sleep(2)
     print("His maniacal laughter echoes through the dungeon.")
     return action_9
-
 
 def action_11():
     time.sleep(1)
@@ -397,7 +423,6 @@ def action_11():
         elif response == "e":
             time.sleep(1)
             return action_16
-
 
 def action_12():
     time.sleep(1)
@@ -465,7 +490,6 @@ def action_13():
             time.sleep(1)
             print("You run through the door to the west.")
             return action_14
-
 
 def action_14():
     time.sleep(1)
@@ -594,7 +618,6 @@ def action_16():
             print("You run through the door to the east.")
             return action_17
 
-
 def action_17():
     time.sleep(1)
     print("\n")
@@ -608,6 +631,7 @@ def action_17():
         print("I was safe behind the pillars to my right.")
         print("However, a blue hand grabbed me when I ")
         print("hid behind the pillar to my left.")
+        print("It took me back to the beginning of the maze.")
         print("\n")
     print("Do you proceed?")
     while True:
@@ -665,7 +689,6 @@ def action_17():
         else:
             time.sleep(1)
             return action_17
-
 
 def action_18():
     global total_deaths
@@ -732,7 +755,6 @@ def action_19():
     time.sleep(10)
     return action_exit
 
-
 def action_exit():
     global inventory
     time.sleep(2)
@@ -779,7 +801,6 @@ def get_input(text):
         else:
             return response
 
-
 def run_battle(player, enemy):
     print("*" * 30)
     print(f"Combat: {player.name} vs {enemy.name}")
@@ -824,6 +845,11 @@ def run_battle(player, enemy):
         if not enemy.is_alive():
             return "victory"
 
+        if player_character.has_boomerang():
+            if random.randint(1, 10) == 1:
+                print("You have stunned enemy with the Boomerang!")
+                time.sleep(1)
+                continue
         print(f"{enemy.name} attacks!")
         if random.randint(0, 5) == 1:
             enemy.defend()
@@ -833,7 +859,7 @@ def run_battle(player, enemy):
             return "defeat"
         if not enemy.is_alive():
             return "victory"
-
+        time.sleep(1)
         round += 1
 
 def run_battle_Alistair(player, enemy):
@@ -908,7 +934,6 @@ def event_loop():
         else:
             current_action = current_action()
 
-
 def main():
     print("\n")
     print(introduction)
@@ -916,7 +941,6 @@ def main():
     name = input("\nDo you remember your name?: ")
     player_character.name = name
     event_loop()
-
 
 if __name__ == "__main__":
     main()

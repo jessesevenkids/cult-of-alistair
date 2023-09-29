@@ -249,6 +249,27 @@ def spawn_skeleton():
     return skeleton
 
 
+def spawn_MADMAN():
+    # 1 in 100 chance of special skeleton
+    if random.randint(1, 25) == 1:
+        name = "MADDENED MADMAN"
+        health = random.randint(80, 300)
+        attack = random.randint(10, 40)
+        defense = random.randint(5, 30)
+        MADMAN = Character(name, health, attack, defense)
+        MADMAN.equip_head(HeadArmor.new())
+        MADMAN.equip_chest(ChestArmor.new())
+        MADMAN.equip_legs(LegArmor.new())
+        MADMAN.equip_feet(FeetArmor.new())
+    else:
+        name = "MADMAN"
+        health = random.randint(40, 80)
+        attack = random.randint(5, 15)
+        defense = random.randint(1, 10)
+        MADMAN = Character(name, health, attack, defense)
+    return MADMAN
+
+
 def spawn_bat():
     # 1 in 100 chance of special bat
     if random.randint(1, 25) == 1:
@@ -261,7 +282,8 @@ def spawn_bat():
         health = random.randint(10, 25)
         attack = random.randint(4, 10)
         defense = random.randint(1, 3)
-    return Character(name, health, attack, defense)
+        bat = Character(name, health, attack, defense)
+    return bat
 
 
 def spawn_demon():
