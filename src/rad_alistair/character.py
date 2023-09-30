@@ -24,7 +24,7 @@ class Character:
         self.ability = []
         # Inventory
         self.inventory = []
-    
+
     def has_torch(self):
         for item in self.inventory:
             if item.name.lower() == "torch":
@@ -47,13 +47,13 @@ class Character:
         for item in self.inventory:
             if item.name.lower() == "bow":
                 return True
-        return False    
+        return False
 
     def has_boomerang(self):
         for item in self.inventory:
             if item.name.lower() == "boomerang":
                 return True
-        return False 
+        return False
 
     def print_inventory(self):
         max_len = 9
@@ -282,7 +282,7 @@ def spawn_bat():
         health = random.randint(10, 25)
         attack = random.randint(4, 10)
         defense = random.randint(1, 3)
-        bat = Character(name, health, attack, defense)
+    bat = Character(name, health, attack, defense)
     return bat
 
 

@@ -19,9 +19,16 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 requires-python = ">=3.9"
-dependencies = []
-
+dependencies = ["pygame"]
 
 [project.entry-points.console_scripts]
 radmj = "rad_alistair.main:main"
- 
+
+[tool.setuptools.package-data]
+"*" = [
+  "*.ogv",
+  "*.ogg",
+  "*.flac",
+  "*.mp3",
+  "*.aac",
+]

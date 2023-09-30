@@ -4,8 +4,10 @@ import time
 
 from rad_alistair.character import Character, spawn_bat, spawn_demon, spawn_skeleton, spawn_Alistair, spawn_MADMAN
 from rad_alistair.item import Item, Helmet, BaseArmor, HeadArmor, ChestArmor, WaistArmor, LegArmor, FeetArmor, Accessory, Weapon
+from rad_alistair.sound import MusicManager
 
 player_character = Character("Marshmellow", 100, 20, 10)
+music = MusicManager()
 
 introduction = '''You awake but don't open your eyes.
 Your head throbs and an
@@ -54,6 +56,7 @@ def action_1():
     return action_2
 
 def action_2():
+    music.play_enchanted_festival()
     print("\n")
     print("You enter room 2")
     print("The first room is empty but has 3 doors.")
@@ -787,6 +790,8 @@ def get_input(text):
                 print(f"{key.title()}: {value}")
             response = input("> ")
         if response in ("quit", "q", "exit"):
+            music.stop_music()
+            time.sleep(0.5)
             print("See you loser!")
             sys.exit()
         if response in ("backpack", "show backpack"):
@@ -797,7 +802,7 @@ def get_input(text):
             response = input("> ")
         if response in ("map", "m"):
             print_map()
-            response = input("> ") 
+            response = input("> ")
         else:
             return response
 
@@ -827,7 +832,7 @@ def run_battle(player, enemy):
                     return "defeat"
             else:
                 return "draw"
-        
+
         else:
             choice = get_input("1: Attack \n2: Defend \n3: Run")
             if choice == "1":
@@ -894,7 +899,7 @@ def run_battle_Alistair(player, enemy):
                     return "defeat"
             else:
                 return "draw"
-        
+
         else:
             choice = get_input("1: Attack \n2: Defend \n3: Run")
             if choice == "1":
@@ -938,6 +943,7 @@ def main():
     print("\n")
     print(introduction)
     time.sleep(3)
+    music.play_title_theme()
     name = input("\nDo you remember your name?: ")
     player_character.name = name
     event_loop()
@@ -945,9 +951,9 @@ def main():
 if __name__ == "__main__":
     main()
 
-def print_map(): 
+def print_map():
     print('''
-                                                                     
+
      ____________________________________________________
     |            ______ ______                           |
     |           |      |      |                          |
@@ -960,7 +966,7 @@ def print_map():
     |    |  10      9     11     16     17  |            |
     |    |______|__  __|______|______|______|            |
     |           |      |      |      |                   |
-    |           |   7      6      8  |                   | 
+    |           |   7      6      8  |                   |
     |           |______|__  __|______|                   |
     |                  |      |                          |
     |                  |   4  |                          |
